@@ -1,6 +1,8 @@
 GStreamer examples
 ==================
 
+[![Build Status](https://travis-ci.org/alexandernst/GStreamer_examples.png)](https://travis-ci.org/alexandernst/GStreamer_examples)
+
 This project aims to show how to do some things with GStreamer.
 If you have seen all those one-liners living in Google and you
 have been wondering how to "convert" them to C code, then this
