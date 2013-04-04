@@ -3,4 +3,4 @@ compiler: gcc
 script: make
 before_install:
  - sudo apt-get update -qq
- - sudo apt-get install -qq gstreamer0.10-plugins-base gstreamer0.10-plugins-good gstreamer0.10-plugins-bad-multiverse gstreamer0.10-plugins-ugly
+ - sudo apt-get install -qq libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev gstreamer0.10-plugins-base gstreamer0.10-plugins-good gstreamer0.10-plugins-bad-multiverse gstreamer0.10-plugins-ugly
