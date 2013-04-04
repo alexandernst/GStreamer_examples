@@ -27,9 +27,14 @@ GstElement *create_fsioaudio_sink(){
 		bin = gst_bin_new("bin");
 		g_assert(bin);
 
-		audioconvert = create_audioconvert();
-		audioresample = create_audioresample();
-		audio_sink = create_audio_sink();
+		audioconvert = gst_element_factory_make("audioconvert", NULL);
+		g_assert(audioconvert);
+
+		audioresample = gst_element_factory_make("audioresample", NULL);
+		g_assert(audioresample);
+
+		audio_sink = gst_element_factory_make("autoaudiosink", NULL);
+		g_assert(audio_sink);
 
 		gst_bin_add_many(GST_BIN(bin), audioconvert, audioresample, audio_sink, NULL);
 		gst_element_link_many(audioconvert, audioresample, audio_sink, NULL);
@@ -61,6 +66,7 @@ GstElement *create_fsiovideo_src(){
 
 GstElement *create_fsiovideo_sink(){
 	GstElement *fsiovideo_sink, *bin, *video_caps, *ffmpegcolorspace, *videoscale, *video_sink;
+	GstCaps *caps;
 	GstPad *pad;
 
 	fsiovideo_sink = gst_element_factory_make("fsiovideosink", NULL);
@@ -72,10 +78,28 @@ GstElement *create_fsiovideo_sink(){
 		bin = gst_bin_new("bin");
 		g_assert(bin);
 
-		ffmpegcolorspace = create_ffmpegcolorspace();
-		videoscale = create_videoscale();
-		video_caps = create_video_caps();
-		video_sink = create_video_sink();
+		ffmpegcolorspace = gst_element_factory_make("ffmpegcolorspace", NULL);
+		g_assert(ffmpegcolorspace);
+
+		videoscale = gst_element_factory_make("videoscale", NULL);
+		g_assert(videoscale);
+
+		video_caps = gst_element_factory_make("capsfilter", NULL);
+		g_assert(video_caps);
+		caps = gst_caps_new_simple(
+			"video/x-raw-rgb",
+			"width", G_TYPE_INT, 800,
+			"height", G_TYPE_INT, 480,
+			"framerate", GST_TYPE_FRACTION, 15, 1,
+			"bpp", G_TYPE_INT, 24,
+			"depth", G_TYPE_INT, 24,
+			NULL
+		);
+		g_object_set(video_caps, "caps", caps, NULL);
+		gst_caps_unref(caps);
+
+		video_sink = gst_element_factory_make("autovideosink", NULL);
+		g_assert(video_sink);
 
 		gst_bin_add_many(GST_BIN(bin), ffmpegcolorspace, videoscale, video_caps, video_sink, NULL);
 		gst_element_link_many(ffmpegcolorspace, videoscale, video_caps, video_sink, NULL);
