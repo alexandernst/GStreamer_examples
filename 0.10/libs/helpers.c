@@ -1,19 +1,6 @@
 #include "helpers.h"
 
 /* Audio */
-GstElement *create_audio_src(){
-	GstElement *audio_src;
-
-	if(g_getenv("AUDIOSRC")){
-		audio_src = gst_element_factory_make(g_getenv("AUDIOSRC"), NULL);
-	}else{
-		audio_src = gst_element_factory_make("autoaudiosrc", NULL);
-	}
-	g_assert(audio_src);
-
-	return audio_src;
-}
-
 GstElement *create_fsioaudio_src(){
 	GstElement *fsioaudio_src;
 
@@ -25,28 +12,6 @@ GstElement *create_fsioaudio_src(){
 	}
 
 	return fsioaudio_src;
-}
-
-GstElement *create_audiotest_src(){
-	GstElement *audio_src;
-
-	audio_src = gst_element_factory_make("audiotestsrc", NULL);
-	g_assert(audio_src);
-
-	return audio_src;
-}
-
-GstElement *create_audio_sink(){
-	GstElement *audio_sink;
-
-	if(g_getenv("AUDIOSINK")){
-		audio_sink = gst_element_factory_make(g_getenv("AUDIOSINK"), NULL);
-	}else{
-		audio_sink = gst_element_factory_make("autoaudiosink", NULL);
-	}
-	g_assert(audio_sink);
-
-	return audio_sink;
 }
 
 GstElement *create_fsioaudio_sink(){
@@ -78,51 +43,9 @@ GstElement *create_fsioaudio_sink(){
 	return fsioaudio_sink;
 
 }
-
-GstElement *create_audio_enc(gchar *enc){
-	GstElement *audio_enc;
-
-	audio_enc = gst_element_factory_make(enc, enc);
-	g_assert(audio_enc);
-
-	return audio_enc;
-}
-
-GstElement *create_audioconvert(){
-	GstElement *audioconvert;
-
-	audioconvert = gst_element_factory_make("audioconvert", NULL);
-	g_assert(audioconvert);
-
-	return audioconvert;
-
-}
-
-GstElement *create_audioresample(){
-	GstElement *audioresample;
-
-	audioresample = gst_element_factory_make("audioresample", NULL);
-	g_assert(audioresample);
-
-	return audioresample;
-
-}
 /* /Audio */
 
 /* Video */
-GstElement *create_video_src(){
-	GstElement *video_src;
-
-	if(g_getenv("VIDEOSRC")){
-		video_src = gst_element_factory_make(g_getenv("VIDEOSRC"), NULL);
-	}else{
-		video_src = gst_element_factory_make("autovideosrc", NULL);
-	}
-	g_assert(video_src);
-
-	return video_src;
-}
-
 GstElement *create_fsiovideo_src(){
 	GstElement *fsiovideo_src;
 
@@ -134,28 +57,6 @@ GstElement *create_fsiovideo_src(){
 	}
 
 	return fsiovideo_src;
-}
-
-GstElement *create_videotest_src(){
-	GstElement *video_src;
-
-	video_src = gst_element_factory_make("videotestsrc", NULL);
-	g_assert(video_src);
-
-	return video_src;
-}
-
-GstElement *create_video_sink(){
-	GstElement *video_sink;
-
-	if(g_getenv("VIDEOSINK")){
-		video_sink = gst_element_factory_make(g_getenv("VIDEOSINK"), NULL);
-	}else{
-		video_sink = gst_element_factory_make("autovideosink", NULL);
-	}
-	g_assert(video_sink);
-
-	return video_sink;
 }
 
 GstElement *create_fsiovideo_sink(){
@@ -187,151 +88,7 @@ GstElement *create_fsiovideo_sink(){
 
 	return fsiovideo_sink;
 }
-
-GstElement *create_video_caps(){
-	GstElement *capsfilter;
-	GstCaps *caps;
-
-	int width		= g_getenv("WIDTH")		== NULL ? 320	: g_ascii_strtoll(g_getenv("WIDTH"), NULL, 10);
-	int height		= g_getenv("HEIGHT")	== NULL ? 240	: g_ascii_strtoll(g_getenv("HEIGHT"), NULL, 10);
-	int framerate	= g_getenv("FRAMERATE")	== NULL ? 15	: g_ascii_strtoll(g_getenv("FRAMERATE"), NULL, 10);
-	int bpp			= g_getenv("BPP")		== NULL ? 24	: g_ascii_strtoll(g_getenv("BPP"), NULL, 10);
-	int depth		= g_getenv("DEPTH")		== NULL ? 24	: g_ascii_strtoll(g_getenv("DEPTH"), NULL, 10);
-
-	capsfilter = gst_element_factory_make("capsfilter", NULL);
-	g_assert(capsfilter);
-
-	caps = gst_caps_new_simple("video/x-raw-rgb",
-		"width", G_TYPE_INT, width,
-		"height", G_TYPE_INT, height,
-		"framerate", GST_TYPE_FRACTION, framerate, 1,
-		"bpp", G_TYPE_INT, bpp,
-		"depth", G_TYPE_INT, depth,
-		NULL
-	);
-
-	g_object_set(capsfilter, "caps", caps, NULL);
-	gst_caps_unref(caps);
-
-	return capsfilter;
-}
-
-GstElement *create_video_enc(gchar *enc){
-	GstElement *video_enc;
-
-	video_enc = gst_element_factory_make(enc, enc);
-	g_assert(video_enc);
-
-	return video_enc;
-}
-
-GstElement *create_video_mux(gchar *mux){
-	GstElement *video_mux;
-
-	video_mux = gst_element_factory_make(mux, mux);
-	g_assert(video_mux);
-
-	return video_mux;
-}
-
-GstElement *create_ffmpegcolorspace(){
-	GstElement *ffmpegcolorspace;
-
-	ffmpegcolorspace = gst_element_factory_make("ffmpegcolorspace", NULL);
-	g_assert(ffmpegcolorspace);
-
-	return ffmpegcolorspace;
-}
-
-GstElement *create_videoscale(){
-	GstElement *videoscale;
-
-	videoscale = gst_element_factory_make("videoscale", NULL);
-	g_assert(videoscale);
-
-	return videoscale;
-}
-
-GstElement *create_videorate(){
-	GstElement *videorate;
-
-	videorate = gst_element_factory_make("videorate", NULL);
-	g_assert(videorate);
-
-	return videorate;	
-}
 /* /Video */
-
-/* File */
-GstElement *create_file_src(gchar *location){
-	GstElement *file_src;
-
-	file_src = gst_element_factory_make("filesrc", NULL);
-	g_assert(file_src);
-
-	g_object_set(file_src, "location", location, NULL);
-
-	return file_src;
-}
-
-GstElement *create_file_sink(gchar *location){
-	GstElement *file_sink;
-
-	file_sink = gst_element_factory_make("filesink", NULL);
-	g_assert(file_sink);
-
-	g_object_set(file_sink, "location", location, NULL);
-
-	return file_sink;
-}
-/* /File */
-
-/* Utils */
-GstBus *get_bus(GstElement *pipeline){
-	GstBus *bus;
-
-	bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
-	g_assert(bus);
-
-	return bus;
-}
-
-GstElement *create_pipeline(){
-	GstElement *pipeline;
-
-	pipeline = gst_pipeline_new("pipeline");
-	g_assert(pipeline);
-
-	return pipeline;
-}
-
-GstElement *create_queue(gchar *queuename){
-	GstElement *queue;
-
-	queue = gst_element_factory_make("queue", queuename);
-	g_assert(queue);
-
-	return queue;
-}
-
-GstElement *create_decodebin(){
-	GstElement *decodebin;
-
-	decodebin = gst_element_factory_make("decodebin2", NULL);
-	g_assert(decodebin);
-
-	return decodebin;
-}
-
-GstElement *create_uridecodebin(){
-	GstElement *uridecodebin;
-
-	uridecodebin = gst_element_factory_make("uridecodebin", NULL);
-	g_assert(uridecodebin);
-
-	return uridecodebin;
-}
-/* /Utils */
 
 /* Funcs */
 void on_pad_added(GstElement *element, GstPad *pad, GstElement *pipeline){
